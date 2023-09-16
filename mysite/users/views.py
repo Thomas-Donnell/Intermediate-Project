@@ -34,3 +34,6 @@ def login(request):
             account.save()
     context = {'form':form, 'account_form':account_form}
     return render(request, "users/login.html", context)
+
+def index(request):
+    return render(request, "users/index.html",{})
