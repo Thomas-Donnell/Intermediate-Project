@@ -13,10 +13,10 @@
         <form method="POST" action="">
             {% csrf_token %}
           <div class="input-box">
-            <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" placeholder="Username or Email" value="">
+            <input type="text" name="username" id="username" placeholder="Username or Email" value="">
           </div>
           <div class="input-box">
-            <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}" placeholder="Password" value="" >
+            <input type="password" name="password" id="password" placeholder="Password" value="" >
           </div>
           <div class="input-box button">
             <input type="Submit" value="Login">
