@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - www.codingnepalweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELearn</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/teacher.css' %}">
+    <!-- Fontawesome Link for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <h2 class="logo"><a href="#">ELearn</a></h2>
+                <ul class="all-links">
+                    <li id="username"><span>Hello,  {{request.user}}</span></li>
+                    <li><a href="">Settings</a></li>
+                    <li><a href="">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div id="contentwrapper">
+            <div id="content">
+                <a href="{% url 'teachers:deleteCourse' courseId %}">Delete</a>
+                <span>{{courseId}}</span>
+            </div>
+        </div>
+
+        <script src="{% static 'js/script.js' %}"></script>
+    </body>
+</html>

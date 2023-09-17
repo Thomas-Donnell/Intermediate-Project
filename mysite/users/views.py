@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-
+from .models import Account
 # Create your views here.
 from .forms import CreateUserForm, AccountForm
 
@@ -26,12 +26,14 @@ def loginPage(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+        account = Account.objects.get(user=user)
+        is_teacher = account.is_teacher
         if user is not None:
             login(request, user)
-            return redirect('students:home')
+            if is_teacher:
+                return redirect('teachers:home')
+            else:
+                return redirect('students:home')
     context = {}
     return render(request, "users/login.html", context)
 
-def teacherHome(request):
-    context = {}
-    return render(request, "users/home.html", context)
