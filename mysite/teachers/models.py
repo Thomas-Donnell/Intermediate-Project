@@ -10,3 +10,11 @@ class MyClass(models.Model):
 
     def __str__(self):
         return self.class_name
+    
+    
+class EnrolledUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(MyClass, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username

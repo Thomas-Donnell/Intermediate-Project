@@ -1,0 +1,170 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+#contentwrapper{
+    height: 100vh;
+    padding-top: 75px;
+    background: #d3d3d3;
+  }
+#coursediv{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #d3d3d3;
+    width: 60%;
+    height: 80vh;
+    border-radius: 10px;
+  }
+  #classtitle{
+    padding-top: 20px;
+    padding-left: 50px;
+  }
+  #content{
+    height: calc(100%);
+
+  }
+  #tagwrapper{
+    height: calc(100% - 55px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #content span{
+    color: #6e6e6e;
+  }
+
+  #buttons{
+    display: flex;
+  }
+  
+  /* CSS */
+  .button {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-decoration: none;
+  }
+  
+  .button:hover,
+  .button:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #FF4742;
+  }
+  
+  .button:active {
+    opacity: .5;
+  }
+
+  #addstudents{
+    background: #50C878;
+    border: 1px solid #50C878;
+  }
+  #addstudents:hover,
+  #addstudents:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #50C878;
+  }
+
+  .users{
+    display: inline-block; 
+    width: 96%;
+    color: black;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    padding-left: 10px;
+  }
+
+  .inputs{
+    background: #c3e9ff;
+    width: 100%;
+    padding: 5px;
+  }
+  .inputs:nth-child(2n) {
+    background-color: #ffffff; /* Change the color as needed */
+}
+
+  #coursediv{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+  }
+  #coursediv form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  #formwrapper{
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #enrollbtn{
+    margin-top: 5px;
+    background: #50C878;
+    border: 1px solid #50C878;
+  }
+  #enrollbtn:hover,
+  #enrollbtn:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #50C878;
+  }
+  #coursediv form span{
+    float: right;
+  }
+
+  .tags{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    width: 45%;
+    min-width: 300px;
+    height: 100px;
+    background: #2b2b2b;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #FFFFFF;
+  }
+
+  

@@ -18,4 +18,10 @@ class MyClassForm(forms.ModelForm):
     class Meta:
         model = MyClass
         fields = ['class_name', 'class_descriptor']
+
+class EnrollForm(forms.Form):
+    enrolled_users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+    )
         
