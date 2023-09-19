@@ -4,7 +4,7 @@
 #contentwrapper{
   height: 100vh;
   padding-top: 75px;
-  background: red;
+  background: #d3d3d3;
 }
 #content{
   height: calc(100%);

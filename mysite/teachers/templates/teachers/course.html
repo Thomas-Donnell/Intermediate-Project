@@ -49,8 +49,8 @@
                         <a href="{% url 'teachers:deleteCourse' courseId %}" class="button">Delete</a>
                         <div class="button" id="addstudents">Add Students</div>
                     </div>
-                    <a class="tags" href="">Discussions</a>
-                    <a class="tags" href="">Posts</a>
+                    <a class="tags" href="{% url 'teachers:discussion' courseId %}">Discussions</a>
+                    <a class="tags" href="">Content</a>
                     <a class="tags" href="">Quizes</a>
                     <span>{{courseId}}</span>
                 </div>

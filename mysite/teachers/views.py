@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import MyClassForm, EnrollForm
-from .models import MyClass, EnrolledUser
+from .models import MyClass, EnrolledUser, Discussion
 from django.contrib.auth.models import User
 # Create your views here.
 def home(request):
@@ -34,3 +34,19 @@ def deleteCourse(request, course_id):
     course.delete()
     return redirect('teachers:home')
     
+def discussion(request, course_id):
+    my_class = MyClass.objects.get(id=course_id)
+    messages = Discussion.objects.filter(course=my_class).order_by('-created_at')
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        Discussion.objects.create(course=my_class, author=request.user, subject=subject, message=message)
+        return redirect(reverse('teachers:discussion', args=[course_id]))
+        
+    context = {'courseId': course_id, 'my_class': my_class, 'messages': messages}
+    return render(request, "teachers/discussion.html", context)
+
+def deletePost(request, course_id):
+    course = MyClass.objects.get(pk=course_id)
+    course.delete()
+    return redirect('teachers:home')
