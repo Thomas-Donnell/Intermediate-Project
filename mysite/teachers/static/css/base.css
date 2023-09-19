@@ -59,8 +59,20 @@
     align-items: center;
     margin-left: 0;
   }
-  
-  header a, header span {
+  #bell-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: blue;
+  }
+  #bell-icon svg{
+    background-color: aqua;
+  }
+  .navbar svg:hover{
+    color: #ddd;
+    cursor: pointer;
+  }
+  header a, header span, header svg {
     margin-left: 40px;
     text-decoration: none;
     color: #fff;
@@ -72,6 +84,6 @@
     white-space: pre;
   }
   
-  header a:hover, footer a:hover {
+  header a:hover, footer a:hover, header svg {
     color: #ddd;
   }
