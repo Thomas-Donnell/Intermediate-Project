@@ -23,7 +23,7 @@ class EnrolledUser(models.Model):
     
     
 class Discussion(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course = models.ForeignKey(MyClass, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     subject = models.CharField(max_length=255)
@@ -32,3 +32,13 @@ class Discussion(models.Model):
 
     def __str__(self):
         return self.subject
+    
+class Reply(models.Model):
+    id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(Discussion, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.post.subject

@@ -63,13 +63,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: blue;
-  }
-  #bell-icon svg{
-    background-color: aqua;
   }
   .navbar svg:hover{
-    color: #ddd;
     cursor: pointer;
   }
   header a, header span, header svg {
