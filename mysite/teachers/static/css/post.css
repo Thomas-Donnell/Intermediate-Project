@@ -18,6 +18,27 @@
     color: #a7a7a7;
   }
 
+  #delete-btn{
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    background: #FF4742;
+    padding: 10px;
+    border-radius: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  #delete-btn:hover{
+    background-color: #be3531;
+    box-shadow: 5px 5px #333;
+  }
+  #delete-btn svg{
+    height: 25px;
+    width: 25px;
+  }
+
   #coursediv{
     display: none;
     justify-content: center;

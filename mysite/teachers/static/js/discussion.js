@@ -24,6 +24,7 @@ divs.forEach(function(div) {
     div.addEventListener('click', function() {
         // Your event handling code here
         id = div.getAttribute('data-class-id');
-        window.location.href = `/teachers/post/${id}/`;
+        courseId = div.getAttribute('data-class-courseId');
+        window.location.href = `/teachers/post/${id}/${courseId}/`;
     });
 });

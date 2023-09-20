@@ -46,18 +46,18 @@ def discussion(request, course_id):
     context = {'courseId': course_id, 'my_class': my_class, 'messages': messages}
     return render(request, "teachers/discussion.html", context)
 
-def post(request, id):
+def post(request, id, course_id):
     post = Discussion.objects.get(pk=id)
     replies = Reply.objects.filter(post=post).order_by('-created_at')
     if request.method == 'POST':
         message = request.POST.get('message')
         Reply.objects.create(post=post, author=request.user, message=message)
-        return redirect(reverse('teachers:post', args=[id]))
-    context = {'post':post, 'replies':replies}
+        return redirect(reverse('teachers:post', args=[id, course_id]))
+    context = {'post':post, 'replies':replies, 'courseId':course_id}
     return render(request, "teachers/post.html", context)
 
 
-def deletePost(request, course_id):
-    course = MyClass.objects.get(pk=course_id)
-    course.delete()
-    return redirect('teachers:home')
+def deletePost(request, id, course_id):
+    post = Discussion.objects.get(pk=id)
+    post.delete()
+    return redirect(reverse('teachers:discussion', args=[course_id]))

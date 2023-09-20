@@ -69,7 +69,7 @@
             <div id="content">
                 <div id="posts-wrapper">
                     {% for message in messages %}
-                    <div class="posts" data-class-id= "{{ message.id }}">
+                    <div class="posts" data-class-id= "{{ message.id }}" data-class-courseId= "{{ courseId }}">
                         <strong>{{ message.subject }}</strong> - {{ message.created_at }}
                         <p>{{ message.author }}</p>
                     </div>
