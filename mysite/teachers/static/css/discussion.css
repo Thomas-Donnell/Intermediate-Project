@@ -66,10 +66,12 @@
 
   #posts-wrapper{
     margin-top: 100px;
+    width: 50%;
   }
   
   .posts{
     background-color: #0C1A25;
+    width: 100%;
     color: white;
     margin-top: 2px;
     margin-bottom: 2px;
