@@ -28,10 +28,15 @@ class Discussion(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     subject = models.CharField(max_length=255)
     message = models.TextField()
+    file = models.FileField(upload_to='documents/', null=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.subject
+    
+    def delete(self):
+        self.file.delete()
+        super().delete()
     
 class Reply(models.Model):
     id = models.AutoField(primary_key=True)
@@ -42,3 +47,4 @@ class Reply(models.Model):
 
     def __str__(self):
         return self.post.subject
+    

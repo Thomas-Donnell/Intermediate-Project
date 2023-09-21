@@ -20,14 +20,17 @@
   color: #6e6e6e;
 }
 .cards{
-  background: blue;
+  background-image: url('../images/wave.svg');
+  background-size: cover;
+  background-color: #a755a4;
+  font-size: 18px;
   height: 25vh;
   width: 15%;
   min-width: 200px;
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 20px;
-  border-radius: 10%;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   flex-direction: column;

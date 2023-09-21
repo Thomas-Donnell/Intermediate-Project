@@ -25,7 +25,7 @@ divs.forEach(function(div) {
         // Your event handling code here
         id = div.getAttribute('data-class-id');
         courseId = div.getAttribute('data-class-courseId');
-        window.location.href = `/teachers/post/${id}/${courseId}/`;
+        window.location.href = `/students/post/${id}/${courseId}/`;
     });
 });
 const filenameSpan = document.getElementById('filename');

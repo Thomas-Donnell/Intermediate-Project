@@ -13,14 +13,42 @@
   }
 #coursediv{
     display: none;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #d3d3d3;
     width: 60%;
-    height: 80vh;
     border-radius: 10px;
+  }
+
+  #coursediv form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  #formwrapper{
+    width: 100%;
+    border-radius: 10px;
+    max-height: 40vh;
+    overflow: auto;
+  }
+  #enrollbtn{
+    margin-top: 5px;
+    background: #50C878;
+    border: 1px solid #50C878;
+  }
+  #enrollbtn:hover,
+  #enrollbtn:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #50C878;
+  }
+  #coursediv form span{
+    float: right;
   }
   #classtitle{
     padding-top: 20px;
@@ -117,38 +145,7 @@
     background-color: #ffffff; /* Change the color as needed */
 }
 
-  #coursediv{
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 50px;
-  }
-  #coursediv form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-  #formwrapper{
-    width: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  #enrollbtn{
-    margin-top: 5px;
-    background: #50C878;
-    border: 1px solid #50C878;
-  }
-  #enrollbtn:hover,
-  #enrollbtn:active {
-    background-color: initial;
-    background-position: 0 0;
-    color: #50C878;
-  }
-  #coursediv form span{
-    float: right;
-  }
+
 
   .tags{
     display: flex;

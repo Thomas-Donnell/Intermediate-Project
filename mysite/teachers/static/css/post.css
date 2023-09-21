@@ -113,6 +113,32 @@
     flex: 1;
     overflow: auto;
   }
+  #link-wrapper{
+    display: flex;
+    align-items: center;
+  }
+
+  #link-wrapper a {
+    min-width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 12px 25px;
+    border: none;
+    font-weight: 500;
+    background-color: #a755a4;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 25px;
+    text-decoration: none;
+  }
+  #link-wrapper a:hover {
+    background-color: #773b75;
+  }
+
   .replies{
     background-color: #0C1A25;
     width: 100%;

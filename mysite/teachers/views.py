@@ -40,7 +40,14 @@ def discussion(request, course_id):
     if request.method == 'POST':
         subject = request.POST.get('subject')
         message = request.POST.get('message')
-        Discussion.objects.create(course=my_class, author=request.user, subject=subject, message=message)
+        uploaded_file = request.FILES.get('upload')
+        Discussion.objects.create(
+            course=my_class, 
+            author=request.user, 
+            subject=subject, 
+            message=message,
+            file=uploaded_file 
+        )
         return redirect(reverse('teachers:discussion', args=[course_id]))
         
     context = {'courseId': course_id, 'my_class': my_class, 'messages': messages}
@@ -48,12 +55,13 @@ def discussion(request, course_id):
 
 def post(request, id, course_id):
     post = Discussion.objects.get(pk=id)
+    fileName = post.file.name.split("/")[-1]
     replies = Reply.objects.filter(post=post).order_by('-created_at')
     if request.method == 'POST':
         message = request.POST.get('message')
         Reply.objects.create(post=post, author=request.user, message=message)
         return redirect(reverse('teachers:post', args=[id, course_id]))
-    context = {'post':post, 'replies':replies, 'courseId':course_id}
+    context = {'post':post, 'replies':replies, 'courseId':course_id, 'fileName':fileName}
     return render(request, "teachers/post.html", context)
 
 
