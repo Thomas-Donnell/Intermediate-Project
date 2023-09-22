@@ -121,6 +121,11 @@ USE_TZ = True
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Add the path to your static files directory
 ]
+STATICFILES_DIRS += [
+    BASE_DIR / "students" / "static",
+    BASE_DIR / "teachers" / "static",
+    # Add more app directories as needed.
+]
 STATIC_URL = 'static/'
 
 # Default primary key field type
