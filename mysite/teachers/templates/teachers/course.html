@@ -53,7 +53,7 @@
                     </div>
                     <a class="tags" href="{% url 'teachers:discussion' courseId %}">Discussions</a>
                     <a class="tags" href="">Content</a>
-                    <a class="tags" href="">Quizes</a>
+                    <a class="tags" href="{% url 'teachers:quizHub' courseId %}">Quizes</a>
                     <span>{{courseId}}</span>
                 </div>
             </div>
@@ -62,6 +62,6 @@
         <script>
             const csrfToken = "{{ csrf_token }}";
         </script>
-        <script src="{% static 'js/course.js' %}"></script>
+        <script src="{% static 'teachers/js/course.js' %}"></script>
     </body>
 </html>

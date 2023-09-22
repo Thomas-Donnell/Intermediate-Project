@@ -25,6 +25,13 @@ divs.forEach(function(div) {
         // Your event handling code here
         id = div.getAttribute('data-class-id');
         courseId = div.getAttribute('data-class-courseId');
-        window.location.href = `/teachers/post/${id}/${courseId}/`;
+        window.location.href = `/students/post/${id}/${courseId}/`;
     });
+});
+const filenameSpan = document.getElementById('filename');
+const upload = document.getElementById('upload');
+upload.addEventListener('change', function () {
+    if (upload.files.length > 0) {
+        filenameSpan.innerHTML += upload.files[0].name + "<br>";
+    }
 });

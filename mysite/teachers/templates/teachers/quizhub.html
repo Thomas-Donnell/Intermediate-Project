@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ELearn</title>
+    <title>ELearn-QuizHub</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/teacher.css' %}">
+    <link rel="stylesheet" href="{% static 'css/discussion.css' %}">
     <!-- Fontawesome Link for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
   </head>
@@ -24,42 +24,42 @@
                 </ul>
             </nav>
         </header>
+        <div id="backbtn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 18h3.75a5.25 5.25 0 1 0 0-10.5H5M7.5 4L4 7.5L7.5 11"/></svg></div>
         <div id="addbtn"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="white" d="M6.5 1.75a.75.75 0 0 0-1.5 0V5H1.75a.75.75 0 0 0 0 1.5H5v3.25a.75.75 0 0 0 1.5 0V6.5h3.25a.75.75 0 0 0 0-1.5H6.5V1.75Z"/></svg></div>
-        <div id="coursediv" class="wrapper">
-            <div class="wrapper">
-                <h2>Create A Class</h2>
-                <form method="POST" action="">
+        <div id="coursediv">
+            <div class="form-wrapper">
+                <form action="" method="POST" enctype="multipart/form-data" >
                     {% csrf_token %}
-                  <div class="input-box">
-                    <input type="text" name="{{ form.class_name.name }}" id="{{ form.class_name.name }}" placeholder="Class Name" value="">
-                  </div>
-                  <div class="input-box">
-                    <input type="text" name="{{ form.class_descriptor.name }}" id="{{ form.class_descriptor.name }}" placeholder="Descriptor" value="" >
-                  </div>
-                  <div class="input-box button">
-                    <input type="Submit" value="Create">
-                  </div>
+                    <label for="message" class="textarea-label"> Quiz Creation</label>
+                    <input
+                        type="text"
+                        name="title"
+                        id="subject"
+                        placeholder="Title"
+                        class="textarea-input"
+                    />
+                    <button class="btn">
+                        Create Quiz
+                    </button>
                 </form>
             </div>
         </div>
         <div id="contentwrapper">
             <div id="content">
-                {% if classes %}
-                        {% for class in classes %}
-                            <div class="cards" data-class-id= "{{ class.id }}" >
-                                <span>{{ class.class_descriptor }}</span>
-                                <span>{{ class.class_name }}</span>
-                                <span>{{ class.teacher.username }}</span>
-                            </div>
-                        {% endfor %}
-                {% else %}
-                    <span id="noclasses">No Classes have been added</span>
-                {% endif %}
+                <div id="posts-wrapper">
+                    {% for quiz in quizes %}
+                    <div class="quizes" data-class-id= "{{ quiz.id }}" data-class-courseId= "{{ courseId }}">
+                        <strong>{{ quiz.title }}</strong> - {{ quiz.created_at }}
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
+
         <script>
             const csrfToken = "{{ csrf_token }}";
         </script>
-        <script src="{% static 'teachers/js/home.js' %}"></script>
+        <script src="{% static 'teachers/js/quizhub.js' %}"></script>
+        <script src="{% static 'teachers/js/base.js' %}"></script>
     </body>
 </html>

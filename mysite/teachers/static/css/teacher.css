@@ -20,14 +20,17 @@
   color: #6e6e6e;
 }
 .cards{
-  background: blue;
+  background-image: url('../images/wave.svg');
+  background-size: cover;
+  background-color: #a755a4;
+  font-size: 18px;
   height: 25vh;
   width: 15%;
   min-width: 200px;
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 20px;
-  border-radius: 10%;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -148,54 +151,3 @@ form .text h3 a{
 
 
 
-/* @media screen and (max-width: 860px) {
-  .navbar .all-links {
-    position: fixed;
-    left: -100%;
-    width: 300px;
-    display: block;
-    height: 100vh;
-    top: 75px;
-    background: #333;
-    transition: left 0.3s ease;
-  }
-
-  .navbar #menu-toggler:checked~.all-links {
-    left: 0;
-  }
-
-  .navbar .all-links li {
-    font-size: 18px;
-  }
-
-  .navbar #hamburger-btn {
-    display: block;
-  }
-
-  section > p {
-    text-align: center;
-  }
-
-  section .cards .card {
-    width: calc(100% / 2 - 15px);
-    margin-bottom: 30px;
-  }
-
-  .homepage .content h1 {
-    font-size: 40px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-
-  .homepage .content .text {
-    font-size: 17px;
-  }
-
-}
-
-@media screen and (max-width: 560px) {
-  section .cards .card {
-    width: 100%;
-    margin-bottom: 30px;
-  }
-} */
