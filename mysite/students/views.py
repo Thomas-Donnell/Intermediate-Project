@@ -1,8 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from teachers.forms import MyClassForm, EnrollForm
-from teachers.models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question
+from teachers.models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade
 from django.contrib.auth.models import User
 # Create your views here.
 def home(request):
@@ -94,24 +95,28 @@ def quiz(request, id, course_id):
     return render(request, "students/quiz.html", context)
 
 def quizView(request, id, course_id):
+    #Get quiz, questions, and grade model objects
     quiz = Quiz.objects.get(pk=id)
     questions = Question.objects.filter(quiz=quiz)
+    try:
+        grade = Grade.objects.get(quiz=quiz, student=request.user)
+    except ObjectDoesNotExist:
+        grade = None
+    
     if request.method == 'POST':
-        question = request.POST.get('question')
-        option1 = request.POST.get('option1')
-        option2 = request.POST.get('option2')
-        option3 = request.POST.get('option3')
-        option4 = request.POST.get('option4')
-        correct_answer = request.POST.get('correct_answer')
-        Question.objects.create(
-            quiz = quiz,
-            question_text=question, 
-            option1=option1,
-            option2=option2,
-            option3=option3,
-            option4=option4,
-            correct_answer= correct_answer
+        total_questions = len(questions)
+        correct = 0
+        for question in questions:
+            selected_answer = int(request.POST.get(f'question_{question.id}'))
+            if selected_answer == question.correct_answer:
+                correct += 1
+        total = correct/total_questions * 100
+        Grade.objects.create(
+            grade = total,
+            quiz=quiz, 
+            student=request.user
         )
         return redirect(reverse('students:quizView', args=[id, course_id]))
-    context = {"questions":questions, "quiz":quiz, "courseId":course_id}
+    
+    context = {"questions":questions, "quiz":quiz, "courseId":course_id, "grade":grade}
     return render(request, "students/quizview.html", context)

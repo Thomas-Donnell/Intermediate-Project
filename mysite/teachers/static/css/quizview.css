@@ -28,6 +28,13 @@
     margin-top: 100px;
   }
 
+  #grade-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 75px;
+  }
+
   #quiz-wrapper{
     max-height: 60vh;
     min-width: 200px;

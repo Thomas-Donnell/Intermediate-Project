@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import MyClassForm, EnrollForm
-from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question
+from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade
 from django.contrib.auth.models import User
 # Create your views here.
 def home(request):
@@ -89,7 +89,8 @@ def quizHub(request, course_id):
 
 def quiz(request, id, course_id):
     quiz = Quiz.objects.get(pk=id)
-    context = {"quiz":quiz, "courseId":course_id}
+    grades = Grade.objects.filter(quiz=quiz)
+    context = {"quiz":quiz, "courseId":course_id, "grades":grades}
     return render(request, "teachers/quiz.html", context)
 
 def quizView(request, id, course_id):

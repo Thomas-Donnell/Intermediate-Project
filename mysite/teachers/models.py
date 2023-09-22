@@ -70,3 +70,12 @@ class Question(models.Model):
 
     def __str__(self):
         return self.quiz.title
+    
+class Grade(models.Model):
+    id = models.AutoField(primary_key=True)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    grade = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.quiz.title
