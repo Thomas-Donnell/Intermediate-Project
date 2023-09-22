@@ -1,4 +1,3 @@
-
 const btnDiv = document.getElementById('reply-btn');
 const courseDiv = document.getElementById('coursediv');
 const postWrapper = document.getElementById('wrapper');
@@ -14,5 +13,5 @@ const deleteBtn = document.getElementById('delete-btn');
 deleteBtn.addEventListener('click', function() {
     courseId = deleteBtn.getAttribute('data-class-courseId');
     id = deleteBtn.getAttribute('data-class-id');
-    window.location.href = `/teachers/delete_post/${id}/${courseId}/`;
+    window.location.href = `/students/delete_post/${id}/${courseId}/`;
 });

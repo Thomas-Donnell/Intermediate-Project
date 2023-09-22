@@ -55,7 +55,9 @@ def discussion(request, course_id):
 
 def post(request, id, course_id):
     post = Discussion.objects.get(pk=id)
-    fileName = post.file.name.split("/")[-1]
+    fileName = ""
+    if(post.file):
+        fileName = post.file.name.split("/")[-1]
     replies = Reply.objects.filter(post=post).order_by('-created_at')
     if request.method == 'POST':
         message = request.POST.get('message')
@@ -110,5 +112,5 @@ def quizView(request, id, course_id):
             correct_answer= correct_answer
         )
         return redirect(reverse('teachers:quizView', args=[id, course_id]))
-    context = {"questions":questions, "quiz":quiz}
+    context = {"questions":questions, "quiz":quiz, "courseId":course_id}
     return render(request, "teachers/quizview.html", context)

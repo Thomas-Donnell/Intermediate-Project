@@ -30,7 +30,7 @@
                 <div id="tagwrapper">
                     <a class="tags" href="{% url 'students:discussion' courseId %}">Discussions</a>
                     <a class="tags" href="">Content</a>
-                    <a class="tags" href="">Quizes</a>
+                    <a class="tags" href="{% url 'students:quizHub' courseId %}">Quizes</a>
                     <span>{{courseId}}</span>
                 </div>
             </div>

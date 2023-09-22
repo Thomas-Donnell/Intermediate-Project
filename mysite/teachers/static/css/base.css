@@ -83,7 +83,7 @@
     color: #ddd;
   }
 
-  #backbtn{
+  .backbtn{
     position: fixed;
     top: 100px;
     left: 50px;
@@ -94,12 +94,16 @@
     align-items: center;
     cursor: pointer;
   }
+  #homebtn{
+    top:160px;
+  }
 
-  #backbtn svg{
+  .backbtn svg{
     height: 40px;
     width: 40px;
+    color: black;
   }
-  #backbtn svg:hover{
+  .backbtn svg:hover{
     color: #a7a7a7;
   }
 
