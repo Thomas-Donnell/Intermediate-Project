@@ -175,3 +175,10 @@
   .btn:hover {
     background-color: #409e5f;
   }
+
+  #cancel{
+    background-color: #FF4742;
+  }
+  #cancel:hover{
+    background-color: #be3531;
+  }

@@ -17,6 +17,8 @@ def register(request):
             account = account_form.save(commit=False)
             account.user = user
             account.save()
+            return redirect('users:loginPage')
+
     context = {'form':form, 'account_form':account_form}
     return render(request, "users/registration.html", context)
 
@@ -26,9 +28,9 @@ def loginPage(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        account = Account.objects.get(user=user)
-        is_teacher = account.is_teacher
         if user is not None:
+            account = Account.objects.get(user=user)
+            is_teacher = account.is_teacher
             login(request, user)
             if is_teacher:
                 return redirect('teachers:home')

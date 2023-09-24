@@ -115,3 +115,8 @@ def quizView(request, id, course_id):
         return redirect(reverse('teachers:quizView', args=[id, course_id]))
     context = {"questions":questions, "quiz":quiz, "courseId":course_id}
     return render(request, "teachers/quizview.html", context)
+
+def deleteQuiz(requßest, id, course_id):
+    quiz = Quiz.objects.get(pk=id)
+    quiz.delete()
+    return redirect(reverse('teachers:quizHub', args=[course_id]))

@@ -78,6 +78,9 @@
                     <button class="btn">
                         Add Question
                     </button>
+                    <button type="button" class="btn" id="cancel">
+                        Cancel
+                    </button>
                 </form>
             </div>
         </div>
@@ -94,22 +97,22 @@
                                     <p>{{ question.question_text }}</p>
                                     {% if question.option1 %}
                                         <label>
-                                            <input type="radio" name="question_{{ question.id }}" value="1"> {{ question.option1 }}
+                                            <input type="radio" name="answer" value="1"> {{ question.option1 }}
                                         </label><br>
                                     {% endif %}
                                     {% if question.option2 %}
                                         <label>
-                                            <input type="radio" name="question_{{ question.id }}" value="2"> {{ question.option2 }}
+                                            <input type="radio" name="answer" value="2"> {{ question.option2 }}
                                         </label><br>
                                     {% endif %}
                                     {% if question.option3 %}
                                         <label>
-                                            <input type="radio" name="question_{{ question.id }}" value="3"> {{ question.option3 }}
+                                            <input type="radio" name="answer" value="3"> {{ question.option3 }}
                                         </label><br>
                                     {% endif %}
                                     {% if question.option4 %}
                                         <label>
-                                            <input type="radio" name="question_{{ question.id }}" value="4"> {{ question.option4 }}
+                                            <input type="radio" name="answer" value="4"> {{ question.option4 }}
                                         </label><br>
                                     {% endif %}
                                 </div>

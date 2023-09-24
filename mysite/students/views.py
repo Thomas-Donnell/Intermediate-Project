@@ -107,7 +107,7 @@ def quizView(request, id, course_id):
         total_questions = len(questions)
         correct = 0
         for question in questions:
-            selected_answer = int(request.POST.get(f'question_{question.id}'))
+            selected_answer = int(request.POST.get(f"{question.id}"))
             if selected_answer == question.correct_answer:
                 correct += 1
         total = correct/total_questions * 100
