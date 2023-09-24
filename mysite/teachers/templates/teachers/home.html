@@ -1,65 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ELearn</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% extends 'teachers/base.html' %}
+{% load static %}
+
+{% block title %}ELearn{% endblock %}
+
+{% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/teacher.css' %}">
-    <!-- Fontawesome Link for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-  </head>
-    <body>
-        <header>
-            <nav class="navbar">
-                <h2 class="logo"><a href="{% url 'teachers:home' %}">ELearn</a></h2>
-                <ul class="all-links">
-                    <li id="username"><span>Hello,  {{request.user}}</span></li>
-                    <li><a href="">Settings</a></li>
-                    <li><a href="">Logout</a></li>
-                    <li id="bell-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 19v-2h2v-7q0-2.075 1.25-3.688T10.5 4.2v-.7q0-.625.438-1.063T12 2q.625 0 1.063.438T13.5 3.5v.7q2 .5 3.25 2.113T18 10v7h2v2H4Zm8 3q-.825 0-1.413-.588T10 20h4q0 .825-.588 1.413T12 22Z"/></svg>
-                    </li>
-                </ul>
-            </nav>
-        </header>
-        <div id="addbtn"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="white" d="M6.5 1.75a.75.75 0 0 0-1.5 0V5H1.75a.75.75 0 0 0 0 1.5H5v3.25a.75.75 0 0 0 1.5 0V6.5h3.25a.75.75 0 0 0 0-1.5H6.5V1.75Z"/></svg></div>
-        <div id="coursediv" class="wrapper">
-            <div class="wrapper">
-                <h2>Create A Class</h2>
-                <form method="POST" action="">
-                    {% csrf_token %}
-                  <div class="input-box">
+{% endblock %}
+
+{% block content %}
+    <div id="addbtn"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="white" d="M6.5 1.75a.75.75 0 0 0-1.5 0V5H1.75a.75.75 0 0 0 0 1.5H5v3.25a.75.75 0 0 0 1.5 0V6.5h3.25a.75.75 0 0 0 0-1.5H6.5V1.75Z"/></svg></div>
+    <div id="coursediv" class="wrapper">
+        <div class="wrapper">
+            <h2>Create A Class</h2>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="input-box">
                     <input type="text" name="{{ form.class_name.name }}" id="{{ form.class_name.name }}" placeholder="Class Name" value="">
-                  </div>
-                  <div class="input-box">
+                </div>
+                <div class="input-box">
                     <input type="text" name="{{ form.class_descriptor.name }}" id="{{ form.class_descriptor.name }}" placeholder="Descriptor" value="" >
-                  </div>
-                  <div class="input-box button">
+                </div>
+                <div class="input-box button">
                     <input type="Submit" value="Create">
-                  </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
-        <div id="contentwrapper">
-            <div id="content">
-                {% if classes %}
-                        {% for class in classes %}
-                            <div class="cards" data-class-id= "{{ class.id }}" >
-                                <span>{{ class.class_descriptor }}</span>
-                                <span>{{ class.class_name }}</span>
-                                <span>{{ class.teacher.username }}</span>
-                            </div>
-                        {% endfor %}
-                {% else %}
-                    <span id="noclasses">No Classes have been added</span>
-                {% endif %}
-            </div>
+    </div>
+    <div id="contentwrapper">
+        <div id="content">
+            {% if classes %}
+                    {% for class in classes %}
+                        <div class="cards" data-class-id= "{{ class.id }}" >
+                            <span>{{ class.class_descriptor }}</span>
+                            <span>{{ class.class_name }}</span>
+                            <span>{{ class.teacher.username }}</span>
+                        </div>
+                    {% endfor %}
+            {% else %}
+                <span id="noclasses">No Classes have been added</span>
+            {% endif %}
         </div>
-        <script>
-            const csrfToken = "{{ csrf_token }}";
-        </script>
-        <script src="{% static 'teachers/js/home.js' %}"></script>
-    </body>
-</html>
+    </div>
+    <script src="{% static 'teachers/js/home.js' %}"></script>
+{% endblock %}
