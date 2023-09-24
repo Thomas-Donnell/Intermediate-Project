@@ -5,6 +5,9 @@ from django.urls import reverse
 from teachers.forms import MyClassForm, EnrollForm
 from teachers.models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
 # Create your views here.
 def home(request):
     classes = []
@@ -120,3 +123,31 @@ def quizView(request, id, course_id):
     
     context = {"questions":questions, "quiz":quiz, "courseId":course_id, "grade":grade}
     return render(request, "students/quizview.html", context)
+
+def settings(request, url):
+    context = {"url":url}
+    return render(request, "students/settings.html", context)
+
+def changeUsername(request, url):
+    if request.method == 'POST':
+        new_username = request.POST['new_username']
+        user = User.objects.get(username=request.user.username)
+        try:
+            user.username = new_username
+            user.save()
+            messages.success(request, 'Username changed successfully.')
+        except Exception as e:
+            messages.error(request, "This Username is already In use")
+            
+        return redirect(reverse('students:settings', args=[url]))  # Redirect to the user's profile page or another appropriate page
+
+def changePassword(request, url):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Update the session to prevent logging the user out
+            messages.success(request, 'Password changed successfully.')
+        else:
+            messages.error(request, 'Could Not change password, Please Check length')
+            return redirect(reverse('students:settings', args=[url]))  # Redirect to the user's profile page or another appropriate page

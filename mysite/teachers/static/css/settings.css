@@ -1,119 +1,19 @@
-
-#addbtn{
-    position: fixed;
-    top: 100px;
-    right: 50px;
-    background: #50C878;
-    padding: 10px;
-    border-radius: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  #addbtn:hover{
-    background-color: #409e5f;
-    box-shadow: 5px 5px #333;
-  }
-  #addbtn svg{
-    height: 25px;
-    width: 25px;
-  }
-
-  #backbtn{
-    position: fixed;
-    top: 100px;
-    left: 50px;
-    padding: 10px;
-    border-radius: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  #backbtn svg{
-    height: 40px;
-    width: 40px;
-  }
-  #backbtn svg:hover{
-    color: #a7a7a7;
-  }
-
-  #coursediv{
-    display: none;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #d3d3d3;
-    width: 60%;
-    height: 60vh;
-    border-radius: 10px;
-  }
-
-  #contentwrapper{
+#contentwrapper{
     height: 100vh;
     padding-top: 75px;
     background: #d3d3d3;
-  }
-  #content{
+}
+#content{
     height: calc(100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  #content h2{
-    margin-top: 100px;
-  }
-  #posts-wrapper{
-    width: 50%;
-    overflow: auto;
-  }
-  
-  .posts{
-    background-color: #0C1A25;
+    justify-content: center;
     width: 100%;
-    color: white;
-    font-size: 18px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .posts:hover{
-    padding: 20px;
-    transition: all 0.3s;
-  }
-
-  .quizes{
-    background-color: #0C1A25;
-    width: 100%;
-    color: white;
-    font-size: 18px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding: 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .quizes:hover{
-    padding: 25px;
-    transition: all 0.3s;
-  }
-
-  .form-wrapper {
+}
+.form-wrapper {
     margin: 0 auto;
-    max-width: 1000px;
-    width: 100%;
+    width: 50%;
     background: white;
     padding: 10px;
     border-radius: 5px;
@@ -199,7 +99,8 @@
     background-color: #50C878;
     color: white;
     cursor: pointer;
-    margin-top: 25px;
+    margin-top: 5px;
+    margin-bottom: 10px;
   }
   .btn:hover {
     background-color: #409e5f;
