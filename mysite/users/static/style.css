@@ -17,6 +17,12 @@ h1{
   color: white;
   font-size: 50px;
 }
+#error-message{
+  font-size: 20px;
+  margin-top: 5px;
+  color: white;
+}
+
 .wrapper{
   position: relative;
   max-width: 430px;

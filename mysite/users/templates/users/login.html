@@ -27,5 +27,13 @@
         </div>
       </form>
   </div>
+  <div id="error-message">
+    {% if messages %}
+
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+    {% endif %}
+  </div>
 </body>
 </html>
