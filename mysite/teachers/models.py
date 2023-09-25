@@ -79,3 +79,12 @@ class Grade(models.Model):
 
     def __str__(self):
         return self.quiz.title
+    
+class Alert(models.Model):
+    id = models.AutoField(primary_key=True)
+    course = models.ForeignKey(MyClass, on_delete=models.CASCADE)
+    post = models.ForeignKey(Discussion, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.course.class_name

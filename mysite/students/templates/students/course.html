@@ -12,7 +12,14 @@
         <div id="content">
             <div id="classtitle"><h2>{{my_class.class_name}}</h2></div>
             <div id="tagwrapper">
-                <a class="tags" href="{% url 'students:discussion' courseId %}">Discussions</a>
+                <a class="tags" href="{% url 'students:discussion' courseId %}">
+                    {% if alerts > 0 %}
+                        <div id="alerts">
+                            {{alerts}}
+                        </div>
+                    {% endif %}
+                    Discussions
+                </a>
                 <a class="tags" href="">Content</a>
                 <a class="tags" href="{% url 'students:quizHub' courseId %}">Quizes</a>
                 <span>{{courseId}}</span>

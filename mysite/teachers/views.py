@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import MyClassForm, EnrollForm
-from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade
+from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -40,17 +40,24 @@ def deleteCourse(request, course_id):
 def discussion(request, course_id):
     my_class = MyClass.objects.get(id=course_id)
     messages = Discussion.objects.filter(course=my_class).order_by('-created_at')
+    enrolled_users = EnrolledUser.objects.filter(course=my_class)
     if request.method == 'POST':
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         uploaded_file = request.FILES.get('upload')
-        Discussion.objects.create(
+        post = Discussion.objects.create(
             course=my_class, 
             author=request.user, 
             subject=subject, 
             message=message,
             file=uploaded_file 
         )
+        for user in enrolled_users:
+            Alert.objects.create(
+                course=my_class,
+                student=user.user,
+                post= post
+            )
         return redirect(reverse('teachers:discussion', args=[course_id]))
         
     context = {'courseId': course_id, 'my_class': my_class, 'messages': messages}
