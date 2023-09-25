@@ -1,8 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from teachers.forms import MyClassForm, EnrollForm
+from teachers.forms import MyClassForm
 from teachers.models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
@@ -27,7 +26,7 @@ def home(request):
 
 def course(request, course_id):
     my_class = MyClass.objects.get(id=course_id)
-    alerts = Alert.objects.filter(student=request.user).count()
+    alerts = Alert.objects.filter(student=request.user, course=my_class).count()
     if request.method == 'POST':
         enrolled_user_ids = request.POST.getlist('enrolled_users')  # Get a list of selected user IDs
         enrolled_users = User.objects.filter(id__in=enrolled_user_ids)
@@ -43,11 +42,11 @@ def deleteCourse(request, course_id):
     return redirect('students:home')
     
 def discussion(request, course_id):
-    alerts = Alert.objects.filter(student=request.user)
-    alerts.delete()
     my_class = MyClass.objects.get(id=course_id)
     messages = Discussion.objects.filter(course=my_class).order_by('-created_at')
     enrolled_users = EnrolledUser.objects.filter(course=my_class)
+    alerts = Alert.objects.filter(student=request.user, course=my_class)
+    alerts.delete()
     if request.method == 'POST':
         subject = request.POST.get('subject')
         message = request.POST.get('message')

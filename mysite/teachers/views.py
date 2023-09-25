@@ -1,8 +1,8 @@
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .forms import MyClassForm, EnrollForm
+from .forms import MyClassForm
 from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert
+from users.models import Account
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -28,7 +28,9 @@ def course(request, course_id):
         enrolled_users = User.objects.filter(id__in=enrolled_user_ids)
         for user in enrolled_users:
             EnrolledUser.objects.create(user=user, course=my_class)
-    users = User.objects.all()
+    users = Account.objects.filter(is_teacher=False).exclude(
+    user__in=EnrolledUser.objects.filter(course=my_class).values('user')
+    )
     context = {'courseId': course_id, 'users': users, 'my_class': my_class}
     return render(request, "teachers/course.html", context)
 

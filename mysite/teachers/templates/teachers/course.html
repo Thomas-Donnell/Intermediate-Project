@@ -14,9 +14,9 @@
             <div id="formwrapper">
                 {% for user in users %}
                 <div class="inputs">
-                    <label class="users" for="{{ user.id }}">{{ user.username }}</label>
+                    <label class="users" for="{{ user.user.id }}">{{ user.user.username }}</label>
                     <span>
-                        <input type="checkbox" id="{{ user.id }}" name="enrolled_users" value="{{ user.id }}">
+                        <input type="checkbox" id="{{ user.user.id }}" name="enrolled_users" value="{{ user.user.id }}">
                     </span>
                     <br>
                 </div>
