@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Max
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from teachers.forms import MyClassForm
@@ -110,10 +111,16 @@ def quizView(request, id, course_id):
     #Get quiz, questions, and grade model objects
     quiz = Quiz.objects.get(pk=id)
     questions = Question.objects.filter(quiz=quiz)
+    attempt = 0 
     try:
-        grade = Grade.objects.get(quiz=quiz, student=request.user)
+        grades = Grade.objects.filter(quiz=quiz, student=request.user)
+        attempt = len(grades)
+        # Annotate the query with the maximum grade
+        grades = grades.annotate(max_grade=Max('grade'))
+        # Order the results in descending order by the maximum grade
+        highest_grade = grades.order_by('-max_grade').first()
     except ObjectDoesNotExist:
-        grade = None
+        grades = None
     
     if request.method == 'POST':
         total_questions = len(questions)
@@ -126,11 +133,12 @@ def quizView(request, id, course_id):
         Grade.objects.create(
             grade = total,
             quiz=quiz, 
-            student=request.user
+            student=request.user,
+            attempt = attempt + 1
         )
         return redirect(reverse('students:quizView', args=[id, course_id]))
     
-    context = {"questions":questions, "quiz":quiz, "courseId":course_id, "grade":grade}
+    context = {"questions":questions, "quiz":quiz, "courseId":course_id, "attempt":attempt, "grade":highest_grade}
     return render(request, "students/quizview.html", context)
 
 def settings(request, url):

@@ -13,53 +13,53 @@
 
     <div id="contentwrapper">
         <div id="content">
-            {% if grade %}
-                <div id="grade-wrapper">
-                    <h2>Your Grade: <br>
-                        {{grade.grade}}%
-                    </h2>
-                </div>
-            {% else %}
-                <div id="wrapper">
-                    <h2>{{quiz.title}}</h2>
-                    <div id="quiz-wrapper">
-                        <form id="form" method="post">
-                            {% csrf_token %}
-                            {% for question in questions %}
-                            <div class="questions">
-                                <h3>Question {{ forloop.counter }}</h3>
-                                <p>{{ question.question_text }}</p>
-                                {% if question.option1 %}
-                                    <label>
-                                        <input type="radio" name="{{question.id}}" value="1"> {{ question.option1 }}
-                                    </label><br>
-                                {% endif %}
-                                {% if question.option2 %}
-                                    <label>
-                                        <input type="radio" name="{{question.id}}" value="2"> {{ question.option2 }}
-                                    </label><br>
-                                {% endif %}
-                                {% if question.option3 %}
-                                    <label>
-                                        <input type="radio" name="{{question.id}}" value="3"> {{ question.option3 }}
-                                    </label><br>
-                                {% endif %}
-                                {% if question.option4 %}
-                                    <label>
-                                        <input type="radio" name="{{question.id}}" value="4"> {{ question.option4 }}
-                                    </label><br>
-                                {% endif %}
-                            </div>
+            <div id="grade-wrapper" {% if not grade %}style="display: none;"{% endif %}>
+                
+                <h2>Attempt: {{attempt}}/3 <br>
+                    Your Grade: {{grade.grade}}%
+                </h2>
+                {% if attempt < 3 %}
+                    <div class="btn" id="new-submission">New Submission</div>
+                {% endif %}
+            </div>
+            <div id="wrapper" {% if grade %}style="display: none;"{% endif %}>
+                <h2>{{quiz.title}}</h2>
+                <div id="quiz-wrapper">
+                    <form id="form" method="post">
+                        {% csrf_token %}
+                        {% for question in questions %}
+                        <div class="questions">
+                            <h3>Question {{ forloop.counter }}</h3>
+                            <p>{{ question.question_text }}</p>
+                            {% if question.option1 %}
+                                <label>
+                                    <input type="radio" name="{{question.id}}" value="1"> {{ question.option1 }}
+                                </label><br>
+                            {% endif %}
+                            {% if question.option2 %}
+                                <label>
+                                    <input type="radio" name="{{question.id}}" value="2"> {{ question.option2 }}
+                                </label><br>
+                            {% endif %}
+                            {% if question.option3 %}
+                                <label>
+                                    <input type="radio" name="{{question.id}}" value="3"> {{ question.option3 }}
+                                </label><br>
+                            {% endif %}
+                            {% if question.option4 %}
+                                <label>
+                                    <input type="radio" name="{{question.id}}" value="4"> {{ question.option4 }}
+                                </label><br>
+                            {% endif %}
+                        </div>
 
-                        {% endfor %}
-                        </form>
-                    </div>
-                    <button id="submitbtn" class="btn">
-                        Submit
-                    </button>
+                    {% endfor %}
+                    </form>
                 </div>
-            {% endif %}
-            
+                <button id="submitbtn" class="btn">
+                    Submit
+                </button>
+            </div>
         </div>
     </div>
 

@@ -186,9 +186,13 @@
     width: 100%;
     padding: 20px;
     font-size: 20px;
+    cursor: pointer;
   }
   .grades:nth-child(2n) {
     background-color: #0C1A25; /* Change the color as needed */
+  }
+  .grades:hover{
+    opacity: .8;
   }
 
   .inputs{

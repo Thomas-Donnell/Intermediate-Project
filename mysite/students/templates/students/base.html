@@ -17,6 +17,11 @@
                 <h2 class="logo"><a href="{% url 'students:home' %}">ELearn</a></h2>
                 <ul class="all-links">
                     <li id="username"><span>Hello,  {{request.user}}</span></li>
+                    <li>
+                        <form action="POST" method="">
+                            
+                        </form>
+                    </li>
                     <li><a href="{% url 'students:settings' request.path%}">Settings</a></li>
                     <li><a href="{% url 'users:logoutPage' %}">Logout</a></li>
                     <li id="bell-icon">

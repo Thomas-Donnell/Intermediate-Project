@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Max, Subquery, OuterRef
 from django.urls import reverse
 from .forms import MyClassForm
 from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert
@@ -8,6 +9,17 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 # Create your views here.
+
+def search(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        quizzes = Quiz.objects.filter(title__contains = subject)
+        classes = (MyClass.objects.filter(class_name__contains=subject) | 
+        MyClass.objects.filter(class_descriptor__contains=subject))
+        discussions = Discussion.objects.filter(subject__contains = subject)
+    context = {'subject':subject, 'quizzes':quizzes, 'classes':classes, 'discussions':discussions}
+    return render(request, "teachers/search.html", context)
+
 def home(request):
     form = MyClassForm()
 
@@ -101,7 +113,16 @@ def quizHub(request, course_id):
 
 def quiz(request, id, course_id):
     quiz = Quiz.objects.get(pk=id)
-    grades = Grade.objects.filter(quiz=quiz)
+    attempts = Grade.objects.filter(quiz=quiz)
+    subquery = Grade.objects.filter(
+    student=OuterRef('student'),
+    quiz=quiz
+    ).order_by('-grade').values('grade')[:1]
+
+    grades = Grade.objects.filter(
+    quiz=quiz,
+    grade=Subquery(subquery)
+    )
     context = {"quiz":quiz, "courseId":course_id, "grades":grades}
     return render(request, "teachers/quiz.html", context)
 
@@ -128,7 +149,14 @@ def quizView(request, id, course_id):
     context = {"questions":questions, "quiz":quiz, "courseId":course_id}
     return render(request, "teachers/quizview.html", context)
 
-def deleteQuiz(requßest, id, course_id):
+def attempts(request, id, course_id, student_id):
+    quiz = Quiz.objects.get(pk=id)
+    student = User.objects.get(pk=student_id)
+    grades = Grade.objects.filter(quiz=quiz, student=student)
+    context = {"grades":grades, "quiz":quiz, "courseId":course_id}
+    return render(request, "teachers/attempts.html", context)
+
+def deleteQuiz(requqest, id, course_id):
     quiz = Quiz.objects.get(pk=id)
     quiz.delete()
     return redirect(reverse('teachers:quizHub', args=[course_id]))
