@@ -13,6 +13,7 @@ urlpatterns = [
     path("quiz_hub/<str:course_id>/", views.quizHub, name="quizHub"),
     path("quiz/<str:id>/<str:course_id>/", views.quiz, name="quiz"),
     path("quiz_view/<str:id>/<str:course_id>/", views.quizView, name="quizView"),
+    path("options/<str:id>/<str:course_id>/", views.options, name="options"),
     path("delete_quiz/<str:id>/<str:course_id>/", views.deleteQuiz, name="deleteQuiz"),
     re_path(r'^settings/(?P<url>.+)/$', views.settings, name='settings'),
     re_path(r'^change_username/(?P<url>.+)/$', views.changeUsername, name='changeUsername'),

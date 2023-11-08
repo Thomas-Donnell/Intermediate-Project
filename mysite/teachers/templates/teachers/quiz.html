@@ -30,7 +30,7 @@
                 <h2>{{quiz.title}}</h2>
                 <a class="tags" href="{% url 'teachers:quizView' quiz.id courseId %}">Quiz View</a>
                 <div class="tags" id="grades-link">Grades</div>
-                <a class="tags" href="">Visibility</a>
+                <a class="tags" href="{% url 'teachers:options' quiz.id courseId %}">options</a>
                 <span>{{quiz.id}}</span>
             </div>
         </div>

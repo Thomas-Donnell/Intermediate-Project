@@ -156,6 +156,11 @@ def attempts(request, id, course_id, student_id):
     context = {"grades":grades, "quiz":quiz, "courseId":course_id}
     return render(request, "teachers/attempts.html", context)
 
+def options(request, id, course_id):
+    quiz = Quiz.objects.get(pk=id)
+    context = {"quiz":quiz, "courseId":course_id}
+    return render(request, "teachers/options.html", context)
+
 def deleteQuiz(requqest, id, course_id):
     quiz = Quiz.objects.get(pk=id)
     quiz.delete()
