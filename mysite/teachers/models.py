@@ -53,6 +53,9 @@ class Quiz(models.Model):
     course = models.ForeignKey(MyClass, on_delete=models.CASCADE, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
+    is_visible = models.BooleanField(default=False)
+    attempts = models.PositiveIntegerField(default=1)
+    weight = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -67,6 +70,18 @@ class Question(models.Model):
     option3 = models.CharField(max_length=100)
     option4 = models.CharField(max_length=100)
     correct_answer = models.IntegerField(choices=[(1, 'Option 1'), (2, 'Option 2'), (3, 'Option 3'), (4, 'Option 4')])
+
+    def __str__(self):
+        return self.quiz.title
+    
+class StudentQuestion(models.Model):
+    id = models.AutoField(primary_key=True)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    attempt = models.PositiveIntegerField(default=0)
+    correct_answer = models.IntegerField(choices=[(1, 'Option 1'), (2, 'Option 2'), (3, 'Option 3'), (4, 'Option 4')])
+    selected_answer = models.IntegerField(choices=[(1, 'Option 1'), (2, 'Option 2'), (3, 'Option 3'), (4, 'Option 4')])
 
     def __str__(self):
         return self.quiz.title

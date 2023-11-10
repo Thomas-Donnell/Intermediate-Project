@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from django.db.models import Max, Subquery, OuterRef
+from django.db.models import Max, Subquery, OuterRef, Avg
 from django.urls import reverse
 from .forms import MyClassForm
-from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert
+from .models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert, StudentQuestion
 from users.models import Account
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
@@ -33,8 +33,32 @@ def home(request):
     context = {'form':form, 'classes': classes}
     return render(request, "teachers/home.html", context)
 
+class CustomStudent:
+    def __init__(self, student, average):
+        self.student = student
+        self.average = average
+
 def course(request, course_id):
     my_class = MyClass.objects.get(id=course_id)
+    custom_students = []
+    subquery = Grade.objects.filter(
+        student=OuterRef('student'),
+        quiz=OuterRef('quiz')
+    ).order_by('-grade').values('grade')[:1]
+
+    grades_highest = Grade.objects.filter(
+        quiz__course=my_class,
+        grade=Subquery(subquery)
+    )
+    average_highest_grades = (
+        grades_highest
+        .values('student')
+        .annotate(average_highest=Avg('grade'))
+    )
+    for grade in average_highest_grades:
+        student = User.objects.get(pk=grade['student'])
+        custom_students.append(CustomStudent(student, grade['average_highest']))
+
     if request.method == 'POST':
         enrolled_user_ids = request.POST.getlist('enrolled_users')  # Get a list of selected user IDs
         enrolled_users = User.objects.filter(id__in=enrolled_user_ids)
@@ -43,8 +67,44 @@ def course(request, course_id):
     users = Account.objects.filter(is_teacher=False).exclude(
     user__in=EnrolledUser.objects.filter(course=my_class).values('user')
     )
-    context = {'courseId': course_id, 'users': users, 'my_class': my_class}
+    context = {'courseId': course_id, 'users': users, 'my_class': my_class, 'students': custom_students}
     return render(request, "teachers/course.html", context)
+
+class CustomGrade:
+    def __init__(self, quiz, grades):
+        self.quiz = quiz
+        self.grades = grades
+
+def studentView(request, course_id, student_id):
+    course = MyClass.objects.get(id=course_id)
+    student = User.objects.get(pk=student_id)
+    custom_grades = []
+    subquery = Grade.objects.filter(
+        student=student,
+        quiz=OuterRef('pk')  # Use OuterRef to reference the quiz being considered
+    ).values('quiz')
+
+    quizzes = Quiz.objects.filter(
+        course=course,
+        pk__in=Subquery(subquery)
+    )
+    for quiz in quizzes:
+        grades = Grade.objects.filter(quiz=quiz, student=student)
+        custom_grades.append(CustomGrade(quiz, grades))
+    
+    context = {'courseId': course_id, 'studentId': student_id, 'grades': custom_grades}
+    return render(request, "teachers/studentview.html", context)
+
+def attemptView(request, course_id, quiz_id, student_id, attempt):
+    student = User.objects.get(pk=student_id)
+    quiz = Quiz.objects.get(pk=quiz_id)
+    print(student.id, quiz.id)
+    questions = StudentQuestion.objects.filter(quiz=quiz, student=student, attempt=attempt)
+    print(questions)
+    for question in questions:
+        print(question.selected_answer)
+    context = {'courseId': course_id, 'studentId': student_id, 'questions': questions, 'quiz':quiz}
+    return render(request, "teachers/attemptview.html", context)
 
 def deleteCourse(request, course_id):
     course = MyClass.objects.get(pk=course_id)
@@ -158,6 +218,18 @@ def attempts(request, id, course_id, student_id):
 
 def options(request, id, course_id):
     quiz = Quiz.objects.get(pk=id)
+    if request.method == 'POST':
+        is_visible = request.POST.get('visible')
+        if is_visible is None:
+            is_visible = False
+        print(is_visible)
+        weight = request.POST.get('gradeWeight')
+        attempts = request.POST.get('attempts')
+        quiz.is_visible = is_visible 
+        quiz.weight = weight  
+        quiz.attempts = attempts     
+        quiz.save()
+        return redirect(reverse('teachers:options', args=[id, course_id]))
     context = {"quiz":quiz, "courseId":course_id}
     return render(request, "teachers/options.html", context)
 

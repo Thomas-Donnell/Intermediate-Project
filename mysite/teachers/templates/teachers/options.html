@@ -13,19 +13,27 @@
     <div id="contentwrapper">
         <div id="content">
             <form id="options-form" method="POST" action="">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="attempts">Number of Attempts:</label>
-                    <input type="number" id="attempts" name="attempts" min="1" value="1" />
+                    <input type="number" id="attempts" name="attempts" min="1" value="{{quiz.attempts}}" />
                 </div>
             
                 <div class="form-group">
                     <label for="gradeWeight">Grade Weight:</label>
-                    <input type="number" id="gradeWeight" name="gradeWeight" min="1" value="1" />
+                    <input type="number" id="gradeWeight" name="gradeWeight" min="1" value="{{quiz.weight}}" />
                 </div>
                 <div class="form-group">
                     <label for="myValue">VISIBLE</label>
-                    <input type="checkbox" class="sliding-switch" id="myValue" name="myValue" value="1" />
+                    {% if quiz.is_visible %}
+                        <input type="checkbox" class="sliding-switch" id="myValue" name="visible" value="1" checked/>
+                    {% else %}
+                        <input type="checkbox" class="sliding-switch" id="myValue" name="visible" value="1" />
+                    {% endif %}
                 </div>
+                <button class="btn">
+                    Update
+                </button>
             </form>
         </div>
     </div>

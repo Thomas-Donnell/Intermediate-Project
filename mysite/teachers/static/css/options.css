@@ -22,13 +22,17 @@
 .form-group{
     display: flex;
     align-items: center;
+    justify-content: space-between;
+}
+.form-group input{
+    width: 100px;
 }
 .sliding-switch {
     position: relative; left: 0px; top: 0px;
     appearance: none;
     width: 80px;
     height: 40px;
-    border-radius: 12px;
+    border-radius: 20px;
     background-color: #dddddd;
     transition: all 0.5s;
     cursor: pointer;
@@ -53,4 +57,18 @@
     background-color: #0FCE0F;
     transition: all 0.5s;
    }
-   
+
+   .btn {
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 12px 25px;
+    border: none;
+    font-weight: 500;
+    background-color: #50C878;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn:hover {
+    background-color: #409e5f;
+  }

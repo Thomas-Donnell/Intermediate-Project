@@ -15,10 +15,10 @@
         <div id="content">
             <div id="grade-wrapper" {% if not grade %}style="display: none;"{% endif %}>
                 
-                <h2>Attempt: {{attempt}}/3 <br>
+                <h2>Attempt: {{attempt}}/{{quiz.attempts}} <br>
                     Your Grade: {{grade.grade}}%
                 </h2>
-                {% if attempt < 3 %}
+                {% if attempt < quiz.attempts %}
                     <div class="btn" id="new-submission">New Submission</div>
                 {% endif %}
             </div>

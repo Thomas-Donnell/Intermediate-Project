@@ -20,4 +20,6 @@ urlpatterns = [
     re_path(r'^change_password/settings/(?P<url>.+)/$', views.changePassword, name='changePassword'),
     path("search/", views.search, name="search"),
     path("attempts/<str:id>/<str:course_id>/<int:student_id>/", views.attempts, name="attempts"),
+    path("student_view/<str:course_id>/<int:student_id>/", views.studentView, name="studentView"),
+    path("attempt_view/<str:course_id>/<str:quiz_id>/<int:student_id>/<int:attempt>/", views.attemptView, name="attemptView"),
 ]   

@@ -1,14 +1,25 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Max
+from django.db.models import Max, OuterRef, Subquery
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from teachers.forms import MyClassForm
-from teachers.models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert
+from teachers.models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert, StudentQuestion
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 # Create your views here.
+
+def search(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        quizzes = Quiz.objects.filter(title__contains = subject)
+        classes = (MyClass.objects.filter(class_name__contains=subject) | 
+        MyClass.objects.filter(class_descriptor__contains=subject))
+        discussions = Discussion.objects.filter(subject__contains = subject)
+    context = {'subject':subject, 'quizzes':quizzes, 'classes':classes, 'discussions':discussions}
+    return render(request, "students/search.html", context)
+
 def home(request):
     classes = []
     form = MyClassForm()
@@ -42,6 +53,34 @@ def deleteCourse(request, course_id):
     course.delete()
     return redirect('students:home')
     
+class CustomGrade:
+    def __init__(self, quiz, grades):
+        self.quiz = quiz
+        self.grades = grades
+
+def studentView(request, course_id):
+    course = MyClass.objects.get(id=course_id)
+    student = request.user
+    custom_grades = []
+    average = 0
+    subquery = Grade.objects.filter(
+        student=student,
+        quiz=OuterRef('pk')  # Use OuterRef to reference the quiz being considered
+    ).values('quiz')
+
+    quizzes = Quiz.objects.filter(
+        course=course,
+        pk__in=Subquery(subquery)
+    )
+    for quiz in quizzes:
+        grades = Grade.objects.filter(quiz=quiz, student=student)
+        max_grade = Grade.objects.filter(quiz=quiz, student=student).aggregate(max_grade=Max('grade'))['max_grade']
+        average += max_grade
+        custom_grades.append(CustomGrade(quiz, grades))
+    average /= len(quizzes)
+    context = {'courseId': course_id, 'grades': custom_grades, 'average': average}
+    return render(request, "students/studentview.html", context)
+
 def discussion(request, course_id):
     my_class = MyClass.objects.get(id=course_id)
     messages = Discussion.objects.filter(course=my_class).order_by('-created_at')
@@ -127,6 +166,14 @@ def quizView(request, id, course_id):
         correct = 0
         for question in questions:
             selected_answer = int(request.POST.get(f"{question.id}"))
+            StudentQuestion.objects.create(
+                quiz=quiz,
+                student=request.user,
+                question=question,
+                selected_answer=selected_answer,
+                correct_answer=question.correct_answer,
+                attempt=attempt + 1
+            )
             if selected_answer == question.correct_answer:
                 correct += 1
         total = correct/total_questions * 100

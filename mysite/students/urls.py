@@ -16,4 +16,6 @@ urlpatterns = [
     re_path(r'^settings/(?P<url>.+)/$', views.settings, name='settings'),
     re_path(r'^change_username/(?P<url>.+)/$', views.changeUsername, name='changeUsername'),
     re_path(r'^change_password/settings/(?P<url>.+)/$', views.changePassword, name='changePassword'),
+    path("search/", views.search, name="search"),
+    path("student_view/<str:course_id>/", views.studentView, name="studentView"),
 ]
