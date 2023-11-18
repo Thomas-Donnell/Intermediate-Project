@@ -21,7 +21,7 @@ class CustomGrade:
         self.grades = grades
 
 class CustomAnalytics:
-    def __init__(self, course, grades, grade_counts):
+    def __init__(self, course, grades, grade_counts=None):
         self.course = course
         self.grades = grades
         self.grade_counts = grade_counts
@@ -338,11 +338,57 @@ def analytics(request):
                 'grade_counts': grade.grade_counts,
                 'grade_check': len(grade.grades)
             })
-        print(data)
         return JsonResponse(data, safe=False)
     context={'grades':custom_grades, 'students':students}
     return render(request, "teachers/analytics.html", context)
 
 def studentReport(request, student_id):
-    context={}
+    selected_student = User.objects.get(pk=student_id)
+    courses = MyClass.objects.filter(enrolleduser__user=selected_student)
+
+    subquery = Grade.objects.filter(
+        student=OuterRef('student'),
+        quiz=OuterRef('quiz')
+    ).order_by('-grade').values('grade')[:1]
+
+    custom_grades = []
+
+    for course in courses:
+        grades = []
+        index = 0
+        course_students = EnrolledUser.objects.filter(course=course)
+        for student in course_students:
+            total = 0
+            weighting_factor = 0
+            grades_highest = Grade.objects.filter(
+                student=student.user,
+                quiz__course=course,
+                grade=Subquery(subquery)
+            )
+
+            if grades_highest.exists():
+                for grade in grades_highest:
+                    total += (grade.grade * grade.quiz.weight)
+                    weighting_factor += grade.quiz.weight
+                total = round(total / weighting_factor, 2)
+            grades.append(CustomStudent(student.user, total))
+            grades = sorted(grades, key=lambda x: x.average, reverse=False)
+        for grade in grades:
+            print(grade.average)
+            if grade.student == selected_student:
+                break
+            else:    
+                index += 1
+        percentile = round((index/len(grades))*100, 2)
+        custom_grades.append(CustomAnalytics(course, percentile))
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = []
+        for grade in custom_grades:
+            data.append({
+                'course_name': grade.course.class_name,
+                'percentile': grade.grades,
+            })
+        return JsonResponse(data, safe=False)
+    context={'student_id':student_id}
     return render(request, "teachers/studentreport.html", context)
