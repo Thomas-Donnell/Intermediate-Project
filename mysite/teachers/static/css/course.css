@@ -190,9 +190,15 @@
     overflow: auto;
     border-radius: 10px;
   }
-  #average{
-    float: right;
-    margin-right: 8px;
+  .grade-modifiers{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #sortOrder{
+    margin-left: 10px;
+    margin-bottom: 5px;
   }
   .grades{
     display: flex;

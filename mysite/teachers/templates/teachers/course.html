@@ -27,11 +27,17 @@
         </form>
     </div>
     <div id="coursediv-grades">
+        <div class="grade-modifiers">
+            <select id="sortOrder" onchange="sortStudents()">
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+            </select>
+            <span id="average">Weighted Average</span>
+        </div>
         <div id="grades-wrapper" >
-            <span id="average">Average</span>
             {% for student in students %}
-                <div class="grades" data-class-courseId= "{{ courseId }}" data-class-studentId= "{{ student.student.id }}">
-                    <span>{{student.student.username}}</span> 
+                <div class="grades" data-class-courseId= "{{ courseId }}" data-class-studentId= "{{ student.student.user.id }}">
+                    <span>{{student.student.user.username}}</span> 
                     <span>{{student.average}}%</span> 
                 </div>
             {% endfor %}

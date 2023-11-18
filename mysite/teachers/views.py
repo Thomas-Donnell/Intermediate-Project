@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import Max, Subquery, OuterRef, Avg
 from django.urls import reverse
@@ -9,6 +10,21 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 # Create your views here.
+class CustomStudent:
+    def __init__(self, student, average):
+        self.student = student
+        self.average = average
+
+class CustomGrade:
+    def __init__(self, quiz, grades):
+        self.quiz = quiz
+        self.grades = grades
+
+class CustomAnalytics:
+    def __init__(self, course, grades, grade_counts):
+        self.course = course
+        self.grades = grades
+        self.grade_counts = grade_counts
 
 def search(request):
     if request.method == 'POST':
@@ -33,32 +49,33 @@ def home(request):
     context = {'form':form, 'classes': classes}
     return render(request, "teachers/home.html", context)
 
-class CustomStudent:
-    def __init__(self, student, average):
-        self.student = student
-        self.average = average
-
 def course(request, course_id):
     my_class = MyClass.objects.get(id=course_id)
+    students = EnrolledUser.objects.filter(course=my_class)
+    print(students)
     custom_students = []
     subquery = Grade.objects.filter(
         student=OuterRef('student'),
         quiz=OuterRef('quiz')
     ).order_by('-grade').values('grade')[:1]
 
-    grades_highest = Grade.objects.filter(
-        quiz__course=my_class,
-        grade=Subquery(subquery)
-    )
-    average_highest_grades = (
-        grades_highest
-        .values('student')
-        .annotate(average_highest=Avg('grade'))
-    )
-    for grade in average_highest_grades:
-        student = User.objects.get(pk=grade['student'])
-        custom_students.append(CustomStudent(student, grade['average_highest']))
-
+    for student in students:
+        total = 0
+        weighting_factor = 0
+        grades_highest = Grade.objects.filter(
+            student=student.user,
+            quiz__course=my_class,
+            grade=Subquery(subquery)
+        )
+        if grades_highest.exists():
+            print(grades_highest)
+            for grade in grades_highest:
+                total += (grade.grade * grade.quiz.weight)
+                weighting_factor += grade.quiz.weight
+            total = round(total / weighting_factor, 2)
+            custom_students.append(CustomStudent(student, total))
+            
+    custom_students.sort(key=lambda x: x.average, reverse=True)
     if request.method == 'POST':
         enrolled_user_ids = request.POST.getlist('enrolled_users')  # Get a list of selected user IDs
         enrolled_users = User.objects.filter(id__in=enrolled_user_ids)
@@ -69,11 +86,6 @@ def course(request, course_id):
     )
     context = {'courseId': course_id, 'users': users, 'my_class': my_class, 'students': custom_students}
     return render(request, "teachers/course.html", context)
-
-class CustomGrade:
-    def __init__(self, quiz, grades):
-        self.quiz = quiz
-        self.grades = grades
 
 def studentView(request, course_id, student_id):
     course = MyClass.objects.get(id=course_id)
@@ -265,3 +277,72 @@ def changePassword(request, url):
         else:
             messages.error(request, 'Could Not change password, Please Check length')
             return redirect(reverse('teachers:settings', args=[url]))  # Redirect to the user's profile page or another appropriate page
+
+def analytics(request):
+    custom_grades = []
+    students = []
+    courses = MyClass.objects.filter(teacher=request.user)
+    student_ids = EnrolledUser.objects.filter(course__in=courses).values('user').distinct()
+
+    for student in student_ids:
+        students.append(User.objects.get(pk=student['user'])) 
+
+    subquery = Grade.objects.filter(
+        student=OuterRef('student'),
+        quiz=OuterRef('quiz')
+    ).order_by('-grade').values('grade')[:1]
+
+    for course in courses:
+        grades = []
+        grade_counts = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'F': 0}
+        course_students = EnrolledUser.objects.filter(course=course)
+        for student in course_students:
+            total = 0
+            weighting_factor = 0
+            grades_highest = Grade.objects.filter(
+                student=student.user,
+                quiz__course=course,
+                grade=Subquery(subquery)
+            )
+
+            if grades_highest.exists():
+                letter_grade = ''
+                for grade in grades_highest:
+                    total += (grade.grade * grade.quiz.weight)
+                    weighting_factor += grade.quiz.weight
+                total = round(total / weighting_factor, 2)
+                if total >= 90:
+                    letter_grade = 'A'
+                    grade_counts[letter_grade] += 1
+                elif total >= 80:
+                    letter_grade = 'B'
+                    grade_counts[letter_grade] += 1
+                elif total >= 70:
+                    letter_grade = 'C'
+                    grade_counts[letter_grade] += 1
+                elif total >= 60:
+                    letter_grade = 'D'
+                    grade_counts[letter_grade] += 1
+                else:
+                    letter_grade = 'F'
+                    grade_counts[letter_grade] += 1
+
+                grades.append(letter_grade)
+        custom_grades.append(CustomAnalytics(course,grades, grade_counts))
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = []
+        for grade in custom_grades:
+            data.append({
+                'course_id': grade.course.id,
+                'grade_counts': grade.grade_counts,
+                'grade_check': len(grade.grades)
+            })
+        print(data)
+        return JsonResponse(data, safe=False)
+    context={'grades':custom_grades, 'students':students}
+    return render(request, "teachers/analytics.html", context)
+
+def studentReport(request, student_id):
+    context={}
+    return render(request, "teachers/studentreport.html", context)

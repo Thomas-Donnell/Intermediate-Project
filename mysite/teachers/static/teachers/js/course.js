@@ -36,3 +36,30 @@ divs.forEach(function(div) {
         window.location.href = `/teachers/student_view/${courseId}/${studentId}/`;
     });
 });
+
+function sortStudents() {
+    var sortOrderSelect = document.getElementById('sortOrder');
+    var sortOrder = sortOrderSelect.value;
+
+    var gradesWrapper = document.getElementById('grades-wrapper');
+    var grades = Array.from(gradesWrapper.getElementsByClassName('grades'));
+
+    grades.sort(function (a, b) {
+        var gradeA = parseFloat(a.children[1].innerText);
+        var gradeB = parseFloat(b.children[1].innerText);
+
+        if (sortOrder === 'asc') {
+            return gradeA - gradeB;
+        } else {
+            return gradeB - gradeA;
+        }
+    });
+
+    // Clear the grades wrapper
+    gradesWrapper.innerHTML = '';
+
+    // Append sorted grades back to the grades wrapper
+    grades.forEach(function (grade) {
+        gradesWrapper.appendChild(grade);
+    });
+}
