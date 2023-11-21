@@ -7,6 +7,7 @@ class MyClass(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     class_descriptor = models.CharField(max_length=50)
     class_name = models.CharField(max_length=100)
+    term = models.CharField(max_length=100, null=True)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -96,6 +97,17 @@ class Grade(models.Model):
     def __str__(self):
         return self.quiz.title
     
+class FinalGrade(models.Model):
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    course_name = models.CharField(max_length=100)
+    term = models.CharField(max_length=100, null=True)
+    grade = models.DecimalField(max_digits=5, decimal_places=2)
+    percentile = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.student.username
+
 class Alert(models.Model):
     id = models.AutoField(primary_key=True)
     course = models.ForeignKey(MyClass, on_delete=models.CASCADE)

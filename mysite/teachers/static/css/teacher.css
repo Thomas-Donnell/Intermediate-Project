@@ -72,7 +72,7 @@
   transform: translate(-50%, -50%);
   z-index: 1;
   background: white;
-  border-radius: 10%;
+  border-radius: 20px;
   padding: 40px;
 }
 
@@ -149,5 +149,12 @@ form .text h3 a{
   text-decoration: none;
 }
 
-
+select{
+  border: 1px solid black;
+  border-radius: 3px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
 

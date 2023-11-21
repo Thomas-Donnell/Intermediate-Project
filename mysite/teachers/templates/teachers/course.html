@@ -26,6 +26,16 @@
             <button id="enrollbtn" class="button" type="submit">Enroll Selected Users</button>
         </form>
     </div>
+    <div id="coursediv-alert">
+        <div id="alert-wrapper">
+            <span>Do You Want to Submit Final Grades?</span>
+            <div class="finalgrade-button">
+                <a href="{% url 'teachers:submitGrade' courseId %}" class="close" id="yes">Yes</a>
+                <a href="{% url 'teachers:deleteCourse' courseId %}" class="close">No</a>
+            </div>
+        </div>
+        <div class="close" id="close">Close</div>
+    </div>
     <div id="coursediv-grades">
         <div class="grade-modifiers">
             <select id="sortOrder" onchange="sortStudents()">
@@ -42,14 +52,14 @@
                 </div>
             {% endfor %}
         </div>
-        <div id="close">Close</div>
+        <div class="close">Close</div>
     </div>
     <div id="contentwrapper">
         <div id="content">
             <div id="classtitle"><h2>{{my_class.class_name}}</h2></div>
             <div id="tagwrapper">
                 <div id="buttons">
-                    <a href="{% url 'teachers:deleteCourse' courseId %}" class="button">Delete</a>
+                    <div class="button" id="delete">Delete</div>
                     <div class="button" id="addstudents">Add Students</div>
                 </div>
                 <a class="tags" href="{% url 'teachers:discussion' courseId %}">Discussions</a>

@@ -40,7 +40,6 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 50%;
-    height: 50vh;
 }
 
 .pie-chart{
@@ -49,8 +48,8 @@
 }
 
 .bar-chart{
-    max-width: 1000px;
-    max-height: 1000px;
+    max-height: 300px;
+    margin-top: 50px;
 }
 
 .course-title{
@@ -118,4 +117,10 @@
   }
   #close:hover {
     background-color: #be3531;
+  }
+
+  select{
+    border: 1px solid black;
+    border-radius: 3px;
+    align-self: flex-start;
   }

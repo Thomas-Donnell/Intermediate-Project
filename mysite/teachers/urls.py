@@ -24,4 +24,6 @@ urlpatterns = [
     path("attempt_view/<str:course_id>/<str:quiz_id>/<int:student_id>/<int:attempt>/", views.attemptView, name="attemptView"),
     path("analytics/", views.analytics, name="analytics"),
     path("student_report/<int:student_id>/", views.studentReport, name="studentReport"),
+    path("submit_grade/<str:course_id>/", views.submitGrade, name="submitGrade"),
+    path("past_semester/<int:student_id>/<str:term>/", views.pastSemester, name="pastSemester"),
 ]   

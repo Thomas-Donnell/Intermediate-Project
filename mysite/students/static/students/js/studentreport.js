@@ -1,5 +1,3 @@
-const content = document.getElementById('content')
-var studentId = content.getAttribute('data-class-studentId');
 var labels = [];  // Course names
 var dataValues = [];  // Percentiles
 var grades = [];  // grades
@@ -44,7 +42,7 @@ function initialLoad(){
     dataValues = [];  // Percentiles
     grades = [];  // grades
 
-    fetch('/teachers/student_report/' + studentId + '/', {
+    fetch('/students/student_report/', {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         }
@@ -74,7 +72,7 @@ function changeTerm() {
         initialLoad()
     }
     else{
-        fetch('/teachers/past_semester/' + studentId + '/' + term + '/', {
+        fetch('/students/past_semester/' + term + '/', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }

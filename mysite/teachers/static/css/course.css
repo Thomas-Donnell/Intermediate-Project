@@ -36,6 +36,51 @@
     border-radius: 10px;
   }
 
+  #coursediv-alert{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    border-radius: 10px;
+  }
+
+  #alert-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 50%;
+    min-width: 400px;
+    height: 200px;
+    border: 2px solid black;
+    background-color: white;
+  }
+
+  #alert-wrapper span {
+    margin-top: 50px; /* Push the span to the top */
+  }
+
+  .finalgrade-button{
+    display: flex;
+    margin-bottom: 10px;
+  }
+  .finalgrade-button a{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .close#yes{
+    background-color: #50C878;
+  }
+  .close#yes:hover{
+    background-color: #409e5f;
+  }
+
   #coursediv form{
     display: flex;
     flex-direction: column;
@@ -163,7 +208,7 @@
     padding-left: 10px;
   }
 
-  #close{
+  .close{
     width: 175px;
     height: 50px;
     display: flex;
@@ -181,7 +226,7 @@
     text-decoration: none;
     text-align: left;
   }
-  #close:hover {
+  .close:hover {
     background-color: #be3531;
   }
   #grades-wrapper{
@@ -251,4 +296,8 @@
     background: #142c3e;
   }
 
+  select{
+    border: 1px solid black;
+    border-radius: 3px;
+  }
   

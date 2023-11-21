@@ -1,8 +1,10 @@
 const btnDiv = document.getElementById('addstudents');
+const deleteDiv = document.getElementById('delete');
 const gradeDiv = document.getElementById('grades-link');
 const courseGradesDiv = document.getElementById('coursediv-grades');
 const courseDiv = document.getElementById('coursediv');
-const tagWrapper = document.getElementById('tagwrapper')
+const tagWrapper = document.getElementById('tagwrapper');
+const alertDiv = document.getElementById('coursediv-alert')
 
 // Add a click event listener to the trigger div
 btnDiv.addEventListener('click', function () {
@@ -11,18 +13,27 @@ btnDiv.addEventListener('click', function () {
     courseDiv.style.display = 'flex';
 });
 
+deleteDiv.addEventListener('click', function () {
+    // Toggle the display style of the target div
+    content.style.display = 'none';
+    alertDiv.style.display = 'flex';
+});
+
 gradeDiv.addEventListener('click', function () {
     // Toggle the display style of the target div
     courseGradesDiv.style.display = 'flex';
     content.style.display = 'none';
 });
 
-const closeBtn = document.getElementById('close');
+const closeBtns = document.querySelectorAll('.close');
 
-closeBtn.addEventListener('click', function () {
-    // Toggle the display style of the target div
-    courseGradesDiv.style.display = 'none';
-    content.style.display = 'block';
+closeBtns.forEach(function(div) {
+    div.addEventListener('click', function() {
+        // Your event handling code here
+        courseGradesDiv.style.display = 'none';
+        alertDiv.style.display = 'none';
+        content.style.display = 'block';
+    });
 });
 
 const divs = document.querySelectorAll('.grades');
