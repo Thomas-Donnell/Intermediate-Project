@@ -27,12 +27,18 @@ class CustomAnalytics:
         self.grade_counts = grade_counts
 
 def search(request):
+    courses = []
+    enrolled_courses = EnrolledUser.objects.filter(user=request.user)
+    for course in enrolled_courses:
+        courses.append(course.course)
+    
     if request.method == 'POST':
         subject = request.POST.get('subject')
-        quizzes = Quiz.objects.filter(title__contains = subject)
-        classes = (MyClass.objects.filter(class_name__contains=subject) | 
-        MyClass.objects.filter(class_descriptor__contains=subject))
-        discussions = Discussion.objects.filter(subject__contains = subject)
+        quizzes = Quiz.objects.filter(course__in=courses, title__contains = subject)
+        classes = (MyClass.objects.filter(teacher=request.user, class_name__contains=subject) | 
+        MyClass.objects.filter(teacher=request.user, class_descriptor__contains=subject))
+        discussions = Discussion.objects.filter(course__in=courses, subject__contains = subject)
+
     context = {'subject':subject, 'quizzes':quizzes, 'classes':classes, 'discussions':discussions}
     return render(request, "students/search.html", context)
 
@@ -79,6 +85,7 @@ def studentView(request, course_id):
     student = request.user
     custom_grades = []
     average = 0
+    weighting_factor = 0
     subquery = Grade.objects.filter(
         student=student,
         quiz=OuterRef('pk')  # Use OuterRef to reference the quiz being considered
@@ -90,11 +97,13 @@ def studentView(request, course_id):
     )
     for quiz in quizzes:
         grades = Grade.objects.filter(quiz=quiz, student=student)
-        max_grade = Grade.objects.filter(quiz=quiz, student=student).aggregate(max_grade=Max('grade'))['max_grade']
-        average += max_grade
+        max_grade = Grade.objects.filter(quiz=quiz, student=student).order_by('-grade').first()
+        print(max_grade.grade)
+        average += (max_grade.grade * max_grade.quiz.weight)
+        weighting_factor += max_grade.quiz.weight
         custom_grades.append(CustomGrade(quiz, grades))
     if(len(quizzes) > 0):
-        average /= len(quizzes)
+        average = round(average / weighting_factor, 2)
     context = {'courseId': course_id, 'grades': custom_grades, 'average': average}
     return render(request, "students/studentview.html", context)
 

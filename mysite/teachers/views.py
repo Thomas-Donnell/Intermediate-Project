@@ -27,13 +27,20 @@ class CustomAnalytics:
         self.grade_counts = grade_counts
 
 def search(request):
+    students = []
+    courses = MyClass.objects.filter(teacher=request.user)
+    
     if request.method == 'POST':
         subject = request.POST.get('subject')
-        quizzes = Quiz.objects.filter(title__contains = subject)
-        classes = (MyClass.objects.filter(class_name__contains=subject) | 
-        MyClass.objects.filter(class_descriptor__contains=subject))
-        discussions = Discussion.objects.filter(subject__contains = subject)
-    context = {'subject':subject, 'quizzes':quizzes, 'classes':classes, 'discussions':discussions}
+        quizzes = Quiz.objects.filter(course__in=courses, title__contains = subject)
+        classes = (MyClass.objects.filter(teacher=request.user, class_name__contains=subject) | 
+        MyClass.objects.filter(teacher=request.user, class_descriptor__contains=subject))
+        discussions = Discussion.objects.filter(course__in=courses, subject__contains = subject)
+        student_ids = EnrolledUser.objects.filter(course__in=courses, user__username__contains=subject).values('user').distinct()
+
+        for student in student_ids:
+            students.append(User.objects.get(pk=student['user'])) 
+    context = {'subject':subject, 'quizzes':quizzes, 'classes':classes, 'discussions':discussions, 'students':students}
     return render(request, "teachers/search.html", context)
 
 def home(request):

@@ -35,7 +35,15 @@
                         </div>
                     {% endfor %}
                 {% endif %}
-                {% if not classes and not quizzes and not discussions %}
+                {% if students %}
+                    <h2>Students</h2>
+                    {% for student in students %}
+                        <div class="links">
+                            <a href="{% url 'teachers:studentReport' student.id %}">{{student.username}}</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if not classes and not quizzes and not discussions and not students %}
                     <span id="noresult">No Results for {{subject}}</span>
                 {% endif %}
             </div>
