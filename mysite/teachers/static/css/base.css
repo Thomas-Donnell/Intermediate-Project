@@ -67,7 +67,7 @@
   .navbar svg:hover{
     cursor: pointer;
   }
-  header a, header span, header svg {
+  header a, header span, header svg, header form {
     margin-left: 40px;
     text-decoration: none;
     color: #fff;
@@ -126,4 +126,34 @@
   #delete-btn svg{
     height: 25px;
     width: 25px;
+  }
+
+  .nav-form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-textarea-input {
+    height: 40px;
+    border: none;
+    background: #FFFFFF;
+    font-weight: 500;
+    font-size: 14px;
+    color: #07074D;
+    border-radius: 5px;
+  }
+  .nav-btn {
+    height: 40px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px;
+    margin-left: 10px;
+    font-weight: 500;
+    background-color: #a7a7a7;
+    color: white;
+    cursor: pointer;
+  }
+  .nav-btn:hover {
+    background-color: #333;
   }

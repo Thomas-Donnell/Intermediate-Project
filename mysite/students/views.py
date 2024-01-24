@@ -1,13 +1,47 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Max, OuterRef, Subquery
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from teachers.forms import MyClassForm
-from teachers.models import MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert
+from teachers.models import FinalGrade, MyClass, EnrolledUser, Discussion, Reply, Quiz, Question, Grade, Alert, StudentQuestion
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 # Create your views here.
+class CustomStudent:
+    def __init__(self, student, average):
+        self.student = student
+        self.average = average
+
+class CustomGrade:
+    def __init__(self, quiz, grades):
+        self.quiz = quiz
+        self.grades = grades
+
+class CustomAnalytics:
+    def __init__(self, course, grades, grade_counts=None):
+        self.course = course
+        self.grades = grades
+        self.grade_counts = grade_counts
+
+def search(request):
+    courses = []
+    enrolled_courses = EnrolledUser.objects.filter(user=request.user)
+    for course in enrolled_courses:
+        courses.append(course.course)
+    
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        quizzes = Quiz.objects.filter(course__in=courses, title__contains = subject)
+        classes = (MyClass.objects.filter(teacher=request.user, class_name__contains=subject) | 
+        MyClass.objects.filter(teacher=request.user, class_descriptor__contains=subject))
+        discussions = Discussion.objects.filter(course__in=courses, subject__contains = subject)
+
+    context = {'subject':subject, 'quizzes':quizzes, 'classes':classes, 'discussions':discussions}
+    return render(request, "students/search.html", context)
+
 def home(request):
     classes = []
     form = MyClassForm()
@@ -41,6 +75,38 @@ def deleteCourse(request, course_id):
     course.delete()
     return redirect('students:home')
     
+class CustomGrade:
+    def __init__(self, quiz, grades):
+        self.quiz = quiz
+        self.grades = grades
+
+def studentView(request, course_id):
+    course = MyClass.objects.get(pk=course_id)
+    student = request.user
+    custom_grades = []
+    average = 0
+    weighting_factor = 0
+    subquery = Grade.objects.filter(
+        student=student,
+        quiz=OuterRef('pk')  # Use OuterRef to reference the quiz being considered
+    ).values('quiz')
+
+    quizzes = Quiz.objects.filter(
+        course=course,
+        pk__in=Subquery(subquery)
+    )
+    for quiz in quizzes:
+        grades = Grade.objects.filter(quiz=quiz, student=student)
+        max_grade = Grade.objects.filter(quiz=quiz, student=student).order_by('-grade').first()
+        print(max_grade.grade)
+        average += (max_grade.grade * max_grade.quiz.weight)
+        weighting_factor += max_grade.quiz.weight
+        custom_grades.append(CustomGrade(quiz, grades))
+    if(len(quizzes) > 0):
+        average = round(average / weighting_factor, 2)
+    context = {'courseId': course_id, 'grades': custom_grades, 'average': average}
+    return render(request, "students/studentview.html", context)
+
 def discussion(request, course_id):
     my_class = MyClass.objects.get(id=course_id)
     messages = Discussion.objects.filter(course=my_class).order_by('-created_at')
@@ -110,27 +176,42 @@ def quizView(request, id, course_id):
     #Get quiz, questions, and grade model objects
     quiz = Quiz.objects.get(pk=id)
     questions = Question.objects.filter(quiz=quiz)
+    attempt = 0 
     try:
-        grade = Grade.objects.get(quiz=quiz, student=request.user)
+        grades = Grade.objects.filter(quiz=quiz, student=request.user)
+        attempt = len(grades)
+        # Annotate the query with the maximum grade
+        grades = grades.annotate(max_grade=Max('grade'))
+        # Order the results in descending order by the maximum grade
+        highest_grade = grades.order_by('-max_grade').first()
     except ObjectDoesNotExist:
-        grade = None
+        grades = None
     
     if request.method == 'POST':
         total_questions = len(questions)
         correct = 0
         for question in questions:
             selected_answer = int(request.POST.get(f"{question.id}"))
+            StudentQuestion.objects.create(
+                quiz=quiz,
+                student=request.user,
+                question=question,
+                selected_answer=selected_answer,
+                correct_answer=question.correct_answer,
+                attempt=attempt + 1
+            )
             if selected_answer == question.correct_answer:
                 correct += 1
         total = correct/total_questions * 100
         Grade.objects.create(
             grade = total,
             quiz=quiz, 
-            student=request.user
+            student=request.user,
+            attempt = attempt + 1
         )
         return redirect(reverse('students:quizView', args=[id, course_id]))
     
-    context = {"questions":questions, "quiz":quiz, "courseId":course_id, "grade":grade}
+    context = {"questions":questions, "quiz":quiz, "courseId":course_id, "attempt":attempt, "grade":highest_grade}
     return render(request, "students/quizview.html", context)
 
 def settings(request, url):
@@ -160,3 +241,75 @@ def changePassword(request, url):
         else:
             messages.error(request, 'Could Not change password, Please Check length')
             return redirect(reverse('students:settings', args=[url]))  # Redirect to the user's profile page or another appropriate page
+        
+def studentReport(request):
+    selected_student = request.user
+    final_grades = FinalGrade.objects.filter(student=selected_student)
+    terms = []
+    for grade in final_grades:
+        if grade.term not in terms:
+            terms.append(grade.term)
+    print(terms)
+    courses = MyClass.objects.filter(enrolleduser__user=selected_student)
+
+    subquery = Grade.objects.filter(
+        student=OuterRef('student'),
+        quiz=OuterRef('quiz')
+    ).order_by('-grade').values('grade')[:1]
+
+    custom_grades = []
+
+    for course in courses:
+        grades = []
+        index = 0
+        student_grade = 0
+        course_students = EnrolledUser.objects.filter(course=course)
+        for student in course_students:
+            total = 0
+            weighting_factor = 0
+            grades_highest = Grade.objects.filter(
+                student=student.user,
+                quiz__course=course,
+                grade=Subquery(subquery)
+            )
+
+            if grades_highest.exists():
+                for grade in grades_highest:
+                    total += (grade.grade * grade.quiz.weight)
+                    weighting_factor += grade.quiz.weight
+                total = round(total / weighting_factor, 2)
+            grades.append(CustomStudent(student.user, total))
+            grades = sorted(grades, key=lambda x: x.average, reverse=False)
+        for grade in grades:
+            if grade.student == selected_student:
+                student_grade = grade.average
+                break
+            else:    
+                index += 1
+        percentile = round((index/len(grades))*100, 2)
+        custom_grades.append(CustomAnalytics(course, percentile, student_grade))
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = []
+        for grade in custom_grades:
+            data.append({
+                'course_name': grade.course.class_name,
+                'percentile': grade.grades,
+                'grades': grade.grade_counts,
+            })
+        return JsonResponse(data, safe=False)
+    context={'terms':terms}
+    return render(request, "students/studentreport.html", context)
+
+def pastSemester(request, term):
+    student = request.user
+    grades = FinalGrade.objects.filter(student=student, term=term)
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = []
+        for grade in grades:
+            data.append({
+                'course_name': grade.course_name,
+                'percentile': grade.percentile,
+                'grades': grade.grade,
+            })
+        return JsonResponse(data, safe=False)

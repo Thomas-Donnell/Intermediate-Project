@@ -10,6 +10,7 @@
         {% block extra_css %}
 
         {% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
         <header>
@@ -17,6 +18,24 @@
                 <h2 class="logo"><a href="{% url 'students:home' %}">ELearn</a></h2>
                 <ul class="all-links">
                     <li id="username"><span>Hello,  {{request.user}}</span></li>
+                    <li>
+                        <li>
+                            <form class="nav-form" method="post" action="{% url 'students:search' %}">
+                                {% csrf_token %}
+                                <input
+                                    type="text"
+                                    name="subject"
+                                    id="subject"
+                                    placeholder="Search"
+                                    class="nav-textarea-input"
+                                />
+                                <button class="nav-btn">
+                                    Search
+                                </button>
+                            </form>
+                        </li>
+                    </li>
+                    <li><a href="{% url 'students:studentReport' %}">Grades</a></li>
                     <li><a href="{% url 'students:settings' request.path%}">Settings</a></li>
                     <li><a href="{% url 'users:logoutPage' %}">Logout</a></li>
                     <li id="bell-icon">

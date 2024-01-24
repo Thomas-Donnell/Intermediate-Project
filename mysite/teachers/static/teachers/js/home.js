@@ -18,3 +18,13 @@ divs.forEach(function(div) {
         window.location.href = `course/${courseId}/`;
     });
 });
+
+var currentYear = new Date().getFullYear();
+var yearDropdown = document.getElementById("id_year");
+console.log(currentYear)
+for (var i = 0; i < 10; i++) {
+    var option = document.createElement("option");
+    option.value = currentYear + i;
+    option.text = currentYear + i;
+    yearDropdown.appendChild(option);
+}

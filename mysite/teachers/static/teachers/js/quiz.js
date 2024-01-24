@@ -22,3 +22,16 @@ deleteBtn.addEventListener('click', function() {
     id = deleteBtn.getAttribute('data-class-id');
     window.location.href = `/teachers/delete_quiz/${id}/${courseId}/`;
 });
+
+const divs = document.querySelectorAll('.grades');
+
+// Add a click event listener to each div
+divs.forEach(function(div) {
+    div.addEventListener('click', function() {
+        // Your event handling code here
+        id = div.getAttribute('data-class-id');
+        courseId = div.getAttribute('data-class-courseId');
+        studentId = div.getAttribute('data-class-studentId');
+        window.location.href = `/teachers/attempts/${id}/${courseId}/${studentId}/`;
+    });
+});
